@@ -27,12 +27,24 @@ type teamDraft struct {
 
 var (
 	usersKeys = map[string][]string{
-		"local":  {"users"},
-		"github": {"users"},
+		"local":           {"users"},
+		"github":          {"users"},
+		"gitlab":          {"users"},
+		"bitbucket-cloud": {"users"},
+		"cf":              {"users"},
+		"ldap":            {"users"},
+		"oidc":            {"users"},
+		"oauth":           {"users"},
 	}
 	groupsKeys = map[string][]string{
-		"local":  {},
-		"github": {"teams", "orgs"},
+		"local":           {},
+		"github":          {"teams", "orgs"},
+		"gitlab":          {"teams", "orgs"},
+		"bitbucket-cloud": {"teams"},
+		"cf":              {"orgs", "spaces"},
+		"ldap":            {"groups"},
+		"oidc":            {"groups"},
+		"oauth":           {"groups"},
 	}
 )
 
