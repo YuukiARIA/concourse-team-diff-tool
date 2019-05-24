@@ -1,22 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	"github.com/YuukiARIA/concourse-team-diff-tool/models"
 )
-
-type Team struct {
-	ID   int                 `json:"id"`
-	Name string              `json:"name"`
-	Auth map[string]AuthRule `json:"auth"`
-}
-
-type AuthRule struct {
-	Users  []string `json:"users"`
-	Groups []string `json:"groups"`
-}
 
 func loadTextFromFile(filePath string) ([]byte, error) {
 	file, err := os.Open(filePath)
@@ -45,7 +35,6 @@ func main() {
 	fmt.Println(string(jsonData))
 	fmt.Println(string(yamlData))
 
-	team := Team{}
-	json.Unmarshal(jsonData, &team)
+	team := models.NewFromJSON(jsonData)
 	fmt.Printf("%#v\n", team)
 }
