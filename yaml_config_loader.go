@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/YuukiARIA/concourse-team-diff-tool/models"
 
 	yaml "gopkg.in/yaml.v2"
