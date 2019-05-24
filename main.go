@@ -1,12 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 
+	"github.com/jessevdk/go-flags"
+
 	"github.com/YuukiARIA/concourse-team-diff-tool/models"
 )
+
+type options struct {
+	ConfigFileName string `short:"c" long:"config" description:"team config file (yaml)" required:"yes"`
+}
 
 func loadTextFromFile(filePath string) ([]byte, error) {
 	file, err := os.Open(filePath)
@@ -18,17 +24,21 @@ func loadTextFromFile(filePath string) ([]byte, error) {
 	return ioutil.ReadAll(file)
 }
 
+func loadTextFromReader(reader io.Reader) ([]byte, error) {
+	return ioutil.ReadAll(reader)
+}
+
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Fprintln(os.Stderr, "args: <existing config (json)> <new config (yaml)>")
+	var opts options
+	if _, err := flags.Parse(&opts); err != nil {
 		os.Exit(1)
 	}
 
-	jsonData, err := loadTextFromFile(os.Args[1])
+	jsonData, err := loadTextFromReader(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
-	yamlData, err := loadTextFromFile(os.Args[2])
+	yamlData, err := loadTextFromFile(opts.ConfigFileName)
 	if err != nil {
 		panic(err)
 	}
