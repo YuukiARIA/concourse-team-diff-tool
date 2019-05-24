@@ -39,7 +39,6 @@ var (
 func LoadYAML(yamlData []byte) models.Team {
 	teamDraft := teamDraft{}
 	yaml.Unmarshal(yamlData, &teamDraft)
-	fmt.Printf("TEAM DRAFT\n%#v\n", teamDraft)
 
 	team := models.NewEmpty()
 	for _, role := range teamDraft.Roles {

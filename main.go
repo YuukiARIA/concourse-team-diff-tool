@@ -32,14 +32,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(jsonData))
-	fmt.Println(string(yamlData))
 
-	team := models.NewFromJSON(jsonData)
-	fmt.Printf("%#v\n", team)
-
+	oldTeam := models.NewFromJSON(jsonData)
 	newTeam := LoadYAML(yamlData)
-	fmt.Printf("%#v\n", newTeam)
 
-	Compare(team, newTeam)
+	Compare(oldTeam, newTeam)
 }
