@@ -54,5 +54,37 @@ func LoadYAML(yamlData []byte) models.Team {
 
 func convertToAuthRule(roleDraft map[string]interface{}) models.AuthRule {
 	users, groups := make([]string, 0), make([]string, 0)
+
+	for authName, _ := range roleDraft {
+		if authName == "name" {
+			continue
+		}
+
+		users = append(users, getUsers(roleDraft, authName)...)
+		groups = append(groups, getGroups(roleDraft, authName)...)
+	}
 	return models.AuthRule{users, groups}
+}
+
+func getUsers(roleDraft map[string]interface{}, authName string) []string {
+	return getValues(roleDraft, authName, usersKeys)
+}
+
+func getGroups(roleDraft map[string]interface{}, authName string) []string {
+	return getValues(roleDraft, authName, groupsKeys)
+}
+
+func getValues(roleDraft map[string]interface{}, authName string, keysTable map[string][]string) []string {
+	rule := roleDraft[authName].(map[interface{}]interface{})
+
+	values := make([]string, 0)
+	for _, key := range keysTable[authName] {
+		if list := rule[key]; list != nil {
+			for _, name := range list.([]interface{}) {
+				prefixedName := authName + ":" + name.(string)
+				values = append(values, prefixedName)
+			}
+		}
+	}
+	return values
 }
