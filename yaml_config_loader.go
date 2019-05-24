@@ -56,12 +56,12 @@ func LoadYAML(yamlData []byte) models.Team {
 		if !ok {
 			continue
 		}
-		team.Auth[roleName] = convertToAuthRule(role)
+		team.Auth[roleName] = convertToAuthRule(roleName, role)
 	}
 	return team
 }
 
-func convertToAuthRule(roleDraft map[string]interface{}) models.AuthRule {
+func convertToAuthRule(roleName string, roleDraft map[string]interface{}) *models.AuthRule {
 	users, groups := make([]string, 0), make([]string, 0)
 
 	for authName, value := range roleDraft {
@@ -72,7 +72,7 @@ func convertToAuthRule(roleDraft map[string]interface{}) models.AuthRule {
 		users = append(users, getUsers(rule, authName)...)
 		groups = append(groups, getGroups(rule, authName)...)
 	}
-	return models.AuthRule{users, groups}
+	return &models.AuthRule{RoleName: roleName, Users: users, Groups: groups}
 }
 
 func getUsers(rule map[interface{}]interface{}, authName string) []string {
