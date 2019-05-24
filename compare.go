@@ -23,12 +23,20 @@ func Compare(oldTeam, newTeam models.Team) {
 			compareRule(oldRule, newRule)
 		} else {
 			fmt.Println("role definition deleted: " + roleName)
+			fmt.Println("users:")
+			showAsDeleted(oldRule.Users)
+			fmt.Println("groups:")
+			showAsDeleted(oldRule.Groups)
 		}
 	}
-	for roleName, _ := range newTeam.Auth {
+	for roleName, newRule := range newTeam.Auth {
 		_, exists := oldTeam.Auth[roleName]
 		if !exists {
 			fmt.Println("role newly defined: " + roleName)
+			fmt.Println("users:")
+			showAsCreated(newRule.Users)
+			fmt.Println("groups:")
+			showAsCreated(newRule.Groups)
 		}
 	}
 }
