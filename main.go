@@ -40,4 +40,6 @@ func main() {
 
 	newTeam := LoadYAML(yamlData)
 	fmt.Printf("%#v\n", newTeam)
+
+	Compare(team, newTeam)
 }
