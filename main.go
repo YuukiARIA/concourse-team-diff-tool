@@ -38,5 +38,6 @@ func main() {
 	team := models.NewFromJSON(jsonData)
 	fmt.Printf("%#v\n", team)
 
-	LoadYAML(yamlData)
+	newTeam := LoadYAML(yamlData)
+	fmt.Printf("%#v\n", newTeam)
 }
