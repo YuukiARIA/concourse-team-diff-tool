@@ -16,7 +16,9 @@ var (
 	colorOfStrong   = color.New(color.FgHiWhite).Add(color.Bold)
 )
 
-type compareResult []compareRoleResult
+type compareResult struct {
+	Results []compareRoleResult
+}
 
 type compareRoleResult struct {
 	RoleName       string
@@ -33,7 +35,7 @@ type compareIDsResult struct {
 }
 
 func (c compareResult) hasContent() bool {
-	for _, roleResult := range c {
+	for _, roleResult := range c.Results {
 		if roleResult.hasContent() {
 			return true
 		}
@@ -50,7 +52,7 @@ func (c compareIDsResult) hasContent() bool {
 }
 
 func (c compareResult) show() {
-	for _, roleResult := range c {
+	for _, roleResult := range c.Results {
 		if roleResult.hasContent() {
 			c := colorOfStrong
 			if roleResult.Created {
@@ -98,7 +100,7 @@ func (c compareIDsResult) show() {
 }
 
 func Compare(oldTeam, newTeam models.Team) compareResult {
-	roleResults := compareResult{}
+	roleResults := make([]compareRoleResult, 0)
 
 	for roleName, oldRule := range oldTeam.Auth {
 		var roleResult compareRoleResult
@@ -110,8 +112,8 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 			roleResult = compareRoleResult{
 				RoleName:       roleName,
 				Deleted:        true,
-				UserIDsResult:  compareIDsResult{DeletedIDs: oldRule.Users},
-				GroupIDsResult: compareIDsResult{DeletedIDs: oldRule.Groups},
+				UserIDsResult:  newCompareIDsResult(nil, oldRule.Users, nil),
+				GroupIDsResult: newCompareIDsResult(nil, oldRule.Groups, nil),
 			}
 		}
 		roleResults = append(roleResults, roleResult)
@@ -123,16 +125,18 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 			roleResult := compareRoleResult{
 				RoleName:       roleName,
 				Created:        true,
-				UserIDsResult:  compareIDsResult{CreatedIDs: newRule.Users},
-				GroupIDsResult: compareIDsResult{CreatedIDs: newRule.Groups},
+				UserIDsResult:  newCompareIDsResult(newRule.Users, nil, nil),
+				GroupIDsResult: newCompareIDsResult(newRule.Groups, nil, nil),
 			}
 			roleResults = append(roleResults, roleResult)
 		}
 	}
 
-	roleResults.show()
+	result := compareResult{Results: roleResults}
 
-	return roleResults
+	result.show()
+
+	return result
 }
 
 func compareRule(oldRule, newRule *models.AuthRule) compareRoleResult {
@@ -146,7 +150,21 @@ func compareRule(oldRule, newRule *models.AuthRule) compareRoleResult {
 func compareIds(oldIds, newIds []string) compareIDsResult {
 	oldIdsSet, newIdsSet := stringSet.New(oldIds...), stringSet.New(newIds...)
 	deletedIdsSet, createdIdsSet, retainedIdsSet := stringSet.Partition(oldIdsSet, newIdsSet)
-	return compareIDsResult{createdIdsSet.Array(), deletedIdsSet.Array(), retainedIdsSet.Array()}
+	return newCompareIDsResult(createdIdsSet.Array(), deletedIdsSet.Array(), retainedIdsSet.Array())
+}
+
+func newCompareIDsResult(createdIDs, deletedIDs, retainedIDs []string) compareIDsResult {
+	empty := make([]string, 0)
+	if createdIDs == nil {
+		createdIDs = empty
+	}
+	if deletedIDs == nil {
+		deletedIDs = empty
+	}
+	if retainedIDs == nil {
+		retainedIDs = empty
+	}
+	return compareIDsResult{CreatedIDs: createdIDs, DeletedIDs: deletedIDs, RetainedIDs: retainedIDs}
 }
 
 func showAsCreated(indentLevel int, values ...string) {
