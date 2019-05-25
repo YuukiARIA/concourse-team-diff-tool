@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/fatih/color"
+	yaml "gopkg.in/yaml.v2"
 
 	"github.com/YuukiARIA/concourse-team-diff-tool/models"
 	"github.com/YuukiARIA/concourse-team-diff-tool/stringSet"
@@ -17,21 +20,21 @@ var (
 )
 
 type compareResult struct {
-	Results []compareRoleResult
+	Results []compareRoleResult `yaml:"results"`
 }
 
 type compareRoleResult struct {
-	RoleName       string
-	Created        bool
-	Deleted        bool
-	UserIDsResult  compareIDsResult
-	GroupIDsResult compareIDsResult
+	RoleName       string           `yaml:"role_name"`
+	Created        bool             `yaml:"created"`
+	Deleted        bool             `yaml:"deleted"`
+	UserIDsResult  compareIDsResult `yaml:"user_ids_result"`
+	GroupIDsResult compareIDsResult `yaml:"group_ids_result"`
 }
 
 type compareIDsResult struct {
-	CreatedIDs  []string
-	DeletedIDs  []string
-	RetainedIDs []string
+	CreatedIDs  []string `yaml:"created_ids"`
+	DeletedIDs  []string `yaml:"deleted_ids"`
+	RetainedIDs []string `yaml:"retained_ids"`
 }
 
 func (c compareResult) hasContent() bool {
@@ -132,11 +135,26 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 		}
 	}
 
-	result := compareResult{Results: roleResults}
+	return compareResult{Results: roleResults}
+}
 
+func ShowDefaultFormat(result compareResult) {
 	result.show()
+}
 
-	return result
+func ShowJSONFormat(result compareResult) error {
+	encoder := json.NewEncoder(os.Stdout)
+	encoder.SetIndent("", "    ")
+	return encoder.Encode(&result)
+}
+
+func ShowYAMLFormat(result compareResult) error {
+	bytes, err := yaml.Marshal(&result)
+	if err != nil {
+		return err
+	}
+	fmt.Print(string(bytes))
+	return nil
 }
 
 func compareRule(oldRule, newRule *models.AuthRule) compareRoleResult {

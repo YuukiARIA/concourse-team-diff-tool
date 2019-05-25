@@ -12,6 +12,7 @@ import (
 
 type options struct {
 	ConfigFileName string `short:"c" long:"config" description:"team config file (yaml)" required:"yes"`
+	Format         string `short:"f" long:"format" default:"default" choice:"default" choice:"json" choice:"yaml" choicedescription:"output format (default, json, yaml)"`
 }
 
 func loadTextFromFile(filePath string) ([]byte, error) {
@@ -46,5 +47,14 @@ func main() {
 	oldTeam := models.NewFromJSON(jsonData)
 	newTeam := LoadYAML(yamlData)
 
-	Compare(oldTeam, newTeam)
+	result := Compare(oldTeam, newTeam)
+
+	switch opts.Format {
+	case "default":
+		ShowDefaultFormat(result)
+	case "json":
+		ShowJSONFormat(result)
+	case "yaml":
+		ShowYAMLFormat(result)
+	}
 }
