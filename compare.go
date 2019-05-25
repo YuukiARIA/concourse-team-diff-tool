@@ -13,10 +13,12 @@ import (
 )
 
 var (
-	colorOfCreated  = color.New(color.FgGreen)
-	colorOfDeleted  = color.New(color.FgRed)
-	colorOfRetained = color.New(color.FgWhite)
-	colorOfStrong   = color.New(color.FgHiWhite).Add(color.Bold)
+	colorOfCreated      = color.New(color.FgGreen)
+	colorOfDeleted      = color.New(color.FgRed)
+	colorOfRetained     = color.New(color.FgWhite)
+	colorOfCreatedRole  = color.New(color.FgHiGreen).Add(color.Bold)
+	colorOfDeletedRole  = color.New(color.FgHiRed).Add(color.Bold)
+	colorOfRetainedRole = color.New(color.FgHiWhite).Add(color.Bold)
 )
 
 type compareResult struct {
@@ -57,11 +59,11 @@ func (c compareIDsResult) hasContent() bool {
 func (c compareResult) show() {
 	for _, roleResult := range c.Results {
 		if roleResult.hasContent() {
-			c := colorOfStrong
+			c := colorOfRetainedRole
 			if roleResult.Created {
-				c = c.Add(color.FgGreen)
+				c = colorOfCreatedRole
 			} else if roleResult.Deleted {
-				c = c.Add(color.FgRed)
+				c = colorOfDeletedRole
 			}
 			fmt.Println("role: " + c.SprintFunc()(roleResult.RoleName))
 			roleResult.show()
@@ -92,7 +94,7 @@ func (c compareRoleResult) show() {
 
 func (c compareIDsResult) show() {
 	if len(c.RetainedIDs) > 0 {
-		showAsCreated(4, c.RetainedIDs...)
+		showAsRetained(4, c.RetainedIDs...)
 	}
 	if len(c.CreatedIDs) > 0 {
 		showAsCreated(4, c.CreatedIDs...)
