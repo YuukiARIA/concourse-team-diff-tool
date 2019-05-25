@@ -20,6 +20,8 @@ type compareResult []compareRoleResult
 
 type compareRoleResult struct {
 	RoleName       string
+	Created        bool
+	Deleted        bool
 	UserIDsResult  compareIDsResult
 	GroupIDsResult compareIDsResult
 }
@@ -50,7 +52,13 @@ func (c compareIDsResult) hasContent() bool {
 func (c compareResult) show() {
 	for _, roleResult := range c {
 		if roleResult.hasContent() {
-			fmt.Println("role: " + colorOfStrong.SprintFunc()(roleResult.RoleName))
+			c := colorOfStrong
+			if roleResult.Created {
+				c = c.Add(color.FgGreen)
+			} else if roleResult.Deleted {
+				c = c.Add(color.FgRed)
+			}
+			fmt.Println("role: " + c.SprintFunc()(roleResult.RoleName))
 			roleResult.show()
 		}
 	}
@@ -101,6 +109,7 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 		} else {
 			roleResult = compareRoleResult{
 				RoleName:       roleName,
+				Deleted:        true,
 				UserIDsResult:  compareIDsResult{DeletedIDs: oldRule.Users},
 				GroupIDsResult: compareIDsResult{DeletedIDs: oldRule.Groups},
 			}
@@ -113,6 +122,7 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 		if !exists {
 			roleResult := compareRoleResult{
 				RoleName:       roleName,
+				Created:        true,
 				UserIDsResult:  compareIDsResult{CreatedIDs: newRule.Users},
 				GroupIDsResult: compareIDsResult{CreatedIDs: newRule.Groups},
 			}
