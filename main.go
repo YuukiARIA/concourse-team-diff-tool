@@ -7,7 +7,7 @@ import (
 
 	"github.com/jessevdk/go-flags"
 
-	"github.com/YuukiARIA/concourse-team-diff-tool/models"
+	"github.com/YuukiARIA/glanceable/models"
 )
 
 type options struct {

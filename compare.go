@@ -8,8 +8,8 @@ import (
 	"github.com/fatih/color"
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/YuukiARIA/concourse-team-diff-tool/models"
-	"github.com/YuukiARIA/concourse-team-diff-tool/stringSet"
+	"github.com/YuukiARIA/glanceable/models"
+	"github.com/YuukiARIA/glanceable/stringSet"
 )
 
 var (

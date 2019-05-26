@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/YuukiARIA/concourse-team-diff-tool/models"
+	"github.com/YuukiARIA/glanceable/models"
 
 	yaml "gopkg.in/yaml.v2"
 )

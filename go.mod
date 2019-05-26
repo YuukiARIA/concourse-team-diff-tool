@@ -1,4 +1,4 @@
-module github.com/YuukiARIA/concourse-team-diff-tool
+module github.com/YuukiARIA/glanceable
 
 go 1.12
 
