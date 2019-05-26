@@ -22,7 +22,8 @@ var (
 )
 
 type compareResult struct {
-	Results []compareRoleResult `yaml:"results"`
+	TeamName string              `yaml:"team_name"`
+	Results  []compareRoleResult `yaml:"results"`
 }
 
 type compareRoleResult struct {
@@ -57,6 +58,9 @@ func (c compareIDsResult) hasContent() bool {
 }
 
 func (c compareResult) show() {
+	fmt.Println("team: " + color.New(color.FgWhite).Add(color.Bold).SprintFunc()(c.TeamName))
+	fmt.Println()
+
 	for _, roleResult := range c.Results {
 		if roleResult.hasContent() {
 			c := colorOfRetainedRole
@@ -137,7 +141,7 @@ func Compare(oldTeam, newTeam models.Team) compareResult {
 		}
 	}
 
-	return compareResult{Results: roleResults}
+	return compareResult{TeamName: oldTeam.Name, Results: roleResults}
 }
 
 func ShowDefaultFormat(result compareResult) {
