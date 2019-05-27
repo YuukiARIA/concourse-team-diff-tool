@@ -6,13 +6,13 @@ Glanceable is an unofficial tool for formatting [Concourse](https://concourse-ci
 Currently `fly set-team` shows following output, but it is hard to understand what will change.
 
 <div align="center">
-  <img src="doc/set-team.png" />
+  <img src="doc/set-team.png" width="60%" />
 </div>
 
 Glanceable is a workaround for this.
 
 <div align="center">
-  <img src="doc/get-team-glanceable.png" />
+  <img src="doc/get-team-glanceable.png" width="60%" />
 </div>
 
 ## Usage
