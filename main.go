@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -18,14 +17,6 @@ type options struct {
 	Format         string `short:"f" long:"format" default:"default" choice:"default" choice:"json" choice:"yaml" choicedescription:"output format (default, json, yaml)"`
 }
 
-func loadTextFromFile(filePath string) ([]byte, error) {
-	return ioutil.ReadFile(filePath)
-}
-
-func loadTextFromReader(reader io.Reader) ([]byte, error) {
-	return ioutil.ReadAll(reader)
-}
-
 func main() {
 	var opts options
 
@@ -38,11 +29,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	jsonData, err := loadTextFromReader(os.Stdin)
+	jsonData, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
-	yamlData, err := loadTextFromFile(opts.ConfigFileName)
+	yamlData, err := ioutil.ReadFile(opts.ConfigFileName)
 	if err != nil {
 		panic(err)
 	}
