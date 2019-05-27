@@ -29,6 +29,17 @@ func loadTextFromReader(reader io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(reader)
 }
 
+func showResult(result compareResult, format string) {
+	switch format {
+	case "default":
+		ShowDefaultFormat(result)
+	case "json":
+		ShowJSONFormat(result)
+	case "yaml":
+		ShowYAMLFormat(result)
+	}
+}
+
 func main() {
 	var opts options
 	if _, err := flags.Parse(&opts); err != nil {
@@ -47,14 +58,5 @@ func main() {
 	oldTeam := models.NewFromJSON(jsonData)
 	newTeam := LoadYAML(yamlData)
 
-	result := Compare(oldTeam, newTeam)
-
-	switch opts.Format {
-	case "default":
-		ShowDefaultFormat(result)
-	case "json":
-		ShowJSONFormat(result)
-	case "yaml":
-		ShowYAMLFormat(result)
-	}
+	showResult(Compare(oldTeam, newTeam), opts.Format)
 }
