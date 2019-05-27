@@ -19,6 +19,7 @@ var (
 	colorOfCreatedRole  = aurora.GreenFg | aurora.BrightFg | aurora.BoldFm
 	colorOfDeletedRole  = aurora.RedFg | aurora.BrightFg | aurora.BoldFm
 	colorOfRetainedRole = aurora.WhiteFg | aurora.BrightFg | aurora.BoldFm
+	colorOfTeam         = aurora.WhiteFg | aurora.BrightFg | aurora.BoldFm
 )
 
 type compareResult struct {
@@ -58,17 +59,12 @@ func (c compareIDsResult) hasContent() bool {
 }
 
 func (c compareResult) show() {
-	fmt.Println("team: " + aurora.Colorize(c.TeamName, aurora.WhiteFg|aurora.BrightFg|aurora.BoldFm).String())
+	fmt.Println("team: " + aurora.Colorize(c.TeamName, colorOfTeam).String())
 	fmt.Println()
 
 	for _, roleResult := range c.Results {
 		if roleResult.hasContent() {
-			c := colorOfRetainedRole
-			if roleResult.Created {
-				c = colorOfCreatedRole
-			} else if roleResult.Deleted {
-				c = colorOfDeletedRole
-			}
+			c := getRoleColor(roleResult.Created, roleResult.Deleted)
 			fmt.Println("role: " + aurora.Colorize(roleResult.RoleName, c).String())
 			roleResult.show()
 		}
@@ -106,6 +102,15 @@ func (c compareIDsResult) show() {
 	if len(c.DeletedIDs) > 0 {
 		showAsDeleted(4, c.DeletedIDs...)
 	}
+}
+
+func getRoleColor(created, deleted bool) aurora.Color {
+	if created {
+		return colorOfCreatedRole
+	} else if deleted {
+		return colorOfDeletedRole
+	}
+	return colorOfRetainedRole
 }
 
 func Compare(oldTeam, newTeam models.Team) compareResult {
