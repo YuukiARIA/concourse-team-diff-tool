@@ -12,7 +12,7 @@ import (
 	"github.com/YuukiARIA/glanceable/stringSet"
 )
 
-var (
+const (
 	colorOfCreated      = aurora.GreenFg
 	colorOfDeleted      = aurora.RedFg
 	colorOfRetained     = aurora.WhiteFg
