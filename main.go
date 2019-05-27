@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/jessevdk/go-flags"
@@ -12,6 +14,7 @@ import (
 )
 
 type options struct {
+	ShowVersion    func() `short:"v" long:"version" description:"show version"`
 	ConfigFileName string `short:"c" long:"config" description:"team config file (yaml)" required:"yes"`
 	Format         string `short:"f" long:"format" default:"default" choice:"default" choice:"json" choice:"yaml" choicedescription:"output format (default, json, yaml)"`
 }
@@ -49,6 +52,12 @@ func showResult(result compareResult, format string) {
 
 func main() {
 	var opts options
+
+	opts.ShowVersion = func() {
+		fmt.Printf("%s v%s\n", filepath.Base(os.Args[0]), version)
+		os.Exit(0)
+	}
+
 	if _, err := flags.Parse(&opts); err != nil {
 		os.Exit(1)
 	}
