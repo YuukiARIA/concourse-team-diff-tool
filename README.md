@@ -22,7 +22,7 @@ Glanceable is a workaround for this.
 - existing team configuration in JSON by stdin
 - YAML file of new team configuration by `-c` option
 
-Existing team configuration in JSON is provided by`fly get-team` with `--json` (`-j`).
+Existing team configuration in JSON is provided by `fly get-team` with `--json` (`-j`).
 
 So, usage pattern is basically as follows:
 
