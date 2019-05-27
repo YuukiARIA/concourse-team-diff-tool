@@ -15,14 +15,14 @@ func New(xs ...string) stringSet {
 // Returns 3 disjoint sets: as - bs, bs - as, Intersect(as, bs)
 func Partition(as, bs stringSet) (stringSet, stringSet, stringSet) {
 	aOnly, bOnly, intersect := New(), New(), New()
-	for a, _ := range as {
+	for a := range as {
 		if bs.Contains(a) {
 			intersect.Add(a)
 		} else {
 			aOnly.Add(a)
 		}
 	}
-	for b, _ := range bs {
+	for b := range bs {
 		if !as.Contains(b) {
 			bOnly.Add(b)
 		}
@@ -49,7 +49,7 @@ func (s stringSet) Contains(x string) bool {
 // Convert this set to string array.
 func (s stringSet) Array() []string {
 	array := make([]string, 0)
-	for x, _ := range s {
+	for x := range s {
 		array = append(array, x)
 	}
 	return array

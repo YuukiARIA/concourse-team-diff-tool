@@ -50,7 +50,7 @@ func Test_NewFromJSON(t *testing.T) {
 				Users:    []string{"user1", "user2"},
 				Groups:   []string{"group1", "group2"},
 			},
-			"member": &AuthRule{
+			"member": {
 				RoleName: "member",
 				Users:    []string{},
 				Groups:   []string{"group3"},
