@@ -1,4 +1,4 @@
-package stringSet
+package stringset
 
 import (
 	"reflect"

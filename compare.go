@@ -9,7 +9,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/YuukiARIA/glanceable/models"
-	"github.com/YuukiARIA/glanceable/stringSet"
+	"github.com/YuukiARIA/glanceable/stringset"
 )
 
 const (
@@ -177,8 +177,8 @@ func compareRule(oldRule, newRule *models.AuthRule) compareRoleResult {
 }
 
 func compareIds(oldIds, newIds []string) compareIDsResult {
-	oldIdsSet, newIdsSet := stringSet.New(oldIds...), stringSet.New(newIds...)
-	deletedIdsSet, createdIdsSet, retainedIdsSet := stringSet.Partition(oldIdsSet, newIdsSet)
+	oldIdsSet, newIdsSet := stringset.New(oldIds...), stringset.New(newIds...)
+	deletedIdsSet, createdIdsSet, retainedIdsSet := stringset.Partition(oldIdsSet, newIdsSet)
 	return newCompareIDsResult(createdIdsSet.Array(), deletedIdsSet.Array(), retainedIdsSet.Array())
 }
 

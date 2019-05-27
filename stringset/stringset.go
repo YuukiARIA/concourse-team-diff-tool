@@ -1,4 +1,4 @@
-package stringSet
+package stringset
 
 type stringSet map[string]struct{}
 type unit struct{}
