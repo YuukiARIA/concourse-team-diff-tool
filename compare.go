@@ -28,12 +28,11 @@ func Compare(oldTeam, newTeam *models.Team) models.CompareResult {
 
 		switch {
 		case !oldExists: // means the role is newly defined
-			roleResult := models.NewCompareRoleResultCreated(
+			roleResult = models.NewCompareRoleResultCreated(
 				roleName,
 				models.NewCompareIDsResult(newRule.Users, nil, nil),
 				models.NewCompareIDsResult(newRule.Groups, nil, nil),
 			)
-			roleResults = append(roleResults, roleResult)
 		case !newExists: // means the role definition was deleted
 			roleResult = models.NewCompareRoleResultDeleted(
 				roleName,
