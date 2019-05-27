@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fatih/color"
+	"github.com/logrusorgru/aurora"
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/YuukiARIA/glanceable/models"
@@ -13,12 +13,12 @@ import (
 )
 
 var (
-	colorOfCreated      = color.New(color.FgGreen)
-	colorOfDeleted      = color.New(color.FgRed)
-	colorOfRetained     = color.New(color.FgWhite)
-	colorOfCreatedRole  = color.New(color.FgHiGreen).Add(color.Bold)
-	colorOfDeletedRole  = color.New(color.FgHiRed).Add(color.Bold)
-	colorOfRetainedRole = color.New(color.FgHiWhite).Add(color.Bold)
+	colorOfCreated      = aurora.GreenFg
+	colorOfDeleted      = aurora.RedFg
+	colorOfRetained     = aurora.WhiteFg
+	colorOfCreatedRole  = aurora.GreenFg | aurora.BrightFg | aurora.BoldFm
+	colorOfDeletedRole  = aurora.RedFg | aurora.BrightFg | aurora.BoldFm
+	colorOfRetainedRole = aurora.WhiteFg | aurora.BrightFg | aurora.BoldFm
 )
 
 type compareResult struct {
@@ -58,7 +58,7 @@ func (c compareIDsResult) hasContent() bool {
 }
 
 func (c compareResult) show() {
-	fmt.Println("team: " + color.New(color.FgHiWhite).Add(color.Bold).SprintFunc()(c.TeamName))
+	fmt.Println("team: " + aurora.Colorize(c.TeamName, aurora.WhiteFg|aurora.BrightFg|aurora.BoldFm).String())
 	fmt.Println()
 
 	for _, roleResult := range c.Results {
@@ -69,7 +69,7 @@ func (c compareResult) show() {
 			} else if roleResult.Deleted {
 				c = colorOfDeletedRole
 			}
-			fmt.Println("role: " + c.SprintFunc()(roleResult.RoleName))
+			fmt.Println("role: " + aurora.Colorize(roleResult.RoleName, c).String())
 			roleResult.show()
 		}
 	}
@@ -203,10 +203,10 @@ func showAsRetained(indentLevel int, values ...string) {
 	showWithColor(indentLevel, " ", colorOfRetained, values...)
 }
 
-func showWithColor(indentLevel int, prefix string, color *color.Color, values ...string) {
+func showWithColor(indentLevel int, prefix string, color aurora.Color, values ...string) {
 	for _, value := range values {
 		printIndent(indentLevel)
-		color.Printf("%s %s\n", prefix, value)
+		fmt.Println(aurora.Colorize(fmt.Sprintf("%s %s", prefix, value), color))
 	}
 }
 
