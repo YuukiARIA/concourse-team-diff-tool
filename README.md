@@ -1,6 +1,8 @@
 Glanceable
 ==========
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/YuukiARIA/glanceable)](https://goreportcard.com/report/github.com/YuukiARIA/glanceable)
+
 Glanceable is an unofficial tool for formatting [Concourse](https://concourse-ci.org/) team configurations.
 
 Currently `fly set-team` shows following output, but it is hard to understand what will change.
