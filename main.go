@@ -55,8 +55,11 @@ func main() {
 		panic(err)
 	}
 
-	oldTeam := models.NewFromJSON(jsonData)
+	oldTeam, err := models.NewFromJSON(jsonData)
+	if err != nil {
+		panic(err)
+	}
 	newTeam := LoadYAML(yamlData)
 
-	showResult(Compare(oldTeam, newTeam), opts.Format)
+	showResult(Compare(*oldTeam, newTeam), opts.Format)
 }

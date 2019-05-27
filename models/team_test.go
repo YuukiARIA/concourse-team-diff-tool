@@ -36,9 +36,12 @@ func Test_NewFromJSON(t *testing.T) {
     }
 }
 `
-	got := NewFromJSON([]byte(json))
+	got, err := NewFromJSON([]byte(json))
+	if err != nil {
+		t.Errorf("should not return error, but returned error: %s.", err)
+	}
 
-	expected := Team{
+	expected := &Team{
 		ID:   1,
 		Name: "example",
 		Auth: map[string]*AuthRule{
@@ -56,6 +59,15 @@ func Test_NewFromJSON(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(got, expected) {
-		t.Fail()
+		t.Errorf("parsed structure mismatch. expected %#v but got %#v.", expected, got)
+	}
+}
+
+func Test_NewFromJSON_Invalid(t *testing.T) {
+	json := "NOT JSON"
+
+	_, err := NewFromJSON([]byte(json))
+	if err == nil {
+		t.Error("expected to return error, but not.")
 	}
 }

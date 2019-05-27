@@ -21,13 +21,15 @@ func NewEmpty() Team {
 }
 
 // Helper for construction by unmarshaling json bytes.
-func NewFromJSON(jsonData []byte) Team {
-	team := Team{}
-	json.Unmarshal(jsonData, &team)
+func NewFromJSON(jsonData []byte) (*Team, error) {
+	team := &Team{}
+	if err := json.Unmarshal(jsonData, team); err != nil {
+		return nil, err
+	}
 
 	for roleName, authRule := range team.Auth {
 		authRule.RoleName = roleName
 	}
 
-	return team
+	return team, nil
 }
