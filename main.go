@@ -6,11 +6,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/jessevdk/go-flags"
-
+	"github.com/YuukiARIA/glanceable/formatter"
 	"github.com/YuukiARIA/glanceable/models"
+	"github.com/jessevdk/go-flags"
 )
 
 type options struct {
@@ -19,29 +18,12 @@ type options struct {
 	Format         string `short:"f" long:"format" default:"default" choice:"default" choice:"json" choice:"yaml" choicedescription:"output format (default, json, yaml)"`
 }
 
-const (
-	formatDefault = "default"
-	formatJSON    = "json"
-	formatYAML    = "yaml"
-)
-
 func loadTextFromFile(filePath string) ([]byte, error) {
 	return ioutil.ReadFile(filePath)
 }
 
 func loadTextFromReader(reader io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(reader)
-}
-
-func showResult(result compareResult, format string) {
-	switch strings.ToLower(format) {
-	case formatDefault:
-		ShowDefaultFormat(result)
-	case formatJSON:
-		ShowJSONFormat(result)
-	case formatYAML:
-		ShowYAMLFormat(result)
-	}
 }
 
 func main() {
@@ -74,5 +56,5 @@ func main() {
 		panic(err)
 	}
 
-	showResult(Compare(oldTeam, newTeam), opts.Format)
+	formatter.FormatResult(Compare(oldTeam, newTeam), opts.Format)
 }
