@@ -35,3 +35,47 @@ func (c CompareRoleResult) HasContent() bool {
 func (c CompareIDsResult) HasContent() bool {
 	return len(c.CreatedIDs) > 0 || len(c.DeletedIDs) > 0 || len(c.RetainedIDs) > 0
 }
+
+func NewCompareResult(teamName string, results []CompareRoleResult) CompareResult {
+	return CompareResult{TeamName: teamName, Results: results}
+}
+
+func NewCompareRoleResultRetained(roleName string, userIDsResult, groupIDsResult CompareIDsResult) CompareRoleResult {
+	return CompareRoleResult{
+		RoleName:       roleName,
+		UserIDsResult:  userIDsResult,
+		GroupIDsResult: groupIDsResult,
+	}
+}
+
+func NewCompareRoleResultCreated(roleName string, userIDsResult, groupIDsResult CompareIDsResult) CompareRoleResult {
+	return CompareRoleResult{
+		RoleName:       roleName,
+		Created:        true,
+		UserIDsResult:  userIDsResult,
+		GroupIDsResult: groupIDsResult,
+	}
+}
+
+func NewCompareRoleResultDeleted(roleName string, userIDsResult, groupIDsResult CompareIDsResult) CompareRoleResult {
+	return CompareRoleResult{
+		RoleName:       roleName,
+		Deleted:        true,
+		UserIDsResult:  userIDsResult,
+		GroupIDsResult: groupIDsResult,
+	}
+}
+
+func NewCompareIDsResult(createdIDs, deletedIDs, retainedIDs []string) CompareIDsResult {
+	empty := make([]string, 0)
+	if createdIDs == nil {
+		createdIDs = empty
+	}
+	if deletedIDs == nil {
+		deletedIDs = empty
+	}
+	if retainedIDs == nil {
+		retainedIDs = empty
+	}
+	return CompareIDsResult{CreatedIDs: createdIDs, DeletedIDs: deletedIDs, RetainedIDs: retainedIDs}
+}
