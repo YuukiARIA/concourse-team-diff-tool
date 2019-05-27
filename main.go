@@ -64,5 +64,5 @@ func main() {
 		panic(err)
 	}
 
-	showResult(Compare(*oldTeam, *newTeam), opts.Format)
+	showResult(Compare(oldTeam, newTeam), opts.Format)
 }

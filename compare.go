@@ -113,7 +113,7 @@ func getRoleColor(created, deleted bool) aurora.Color {
 	return colorOfRetainedRole
 }
 
-func Compare(oldTeam, newTeam models.Team) compareResult {
+func Compare(oldTeam, newTeam *models.Team) compareResult {
 	roleResults := make([]compareRoleResult, 0)
 
 	for roleName, oldRule := range oldTeam.Auth {
