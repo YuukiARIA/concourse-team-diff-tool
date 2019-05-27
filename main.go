@@ -59,7 +59,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	newTeam := LoadYAML(yamlData)
+	newTeam, err := LoadYAML(yamlData)
+	if err != nil {
+		panic(err)
+	}
 
-	showResult(Compare(*oldTeam, newTeam), opts.Format)
+	showResult(Compare(*oldTeam, *newTeam), opts.Format)
 }

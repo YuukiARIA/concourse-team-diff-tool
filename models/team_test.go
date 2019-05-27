@@ -8,14 +8,14 @@ import (
 func Test_NewEmpty(t *testing.T) {
 	got := NewEmpty()
 
-	expected := Team{
+	expected := &Team{
 		ID:   0,
 		Name: "",
 		Auth: map[string]*AuthRule{},
 	}
 
 	if !reflect.DeepEqual(got, expected) {
-		t.Fail()
+		t.Errorf("parsed structure mismatch. expected %#v but got %#v.", expected, got)
 	}
 }
 

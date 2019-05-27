@@ -46,9 +46,11 @@ var (
 	}
 )
 
-func LoadYAML(yamlData []byte) models.Team {
+func LoadYAML(yamlData []byte) (*models.Team, error) {
 	teamDraft := teamDraft{}
-	yaml.Unmarshal(yamlData, &teamDraft)
+	if err := yaml.Unmarshal(yamlData, &teamDraft); err != nil {
+		return nil, err
+	}
 
 	team := models.NewEmpty()
 	for _, role := range teamDraft.Roles {
@@ -58,7 +60,7 @@ func LoadYAML(yamlData []byte) models.Team {
 		}
 		team.Auth[roleName] = convertToAuthRule(roleName, role)
 	}
-	return team
+	return team, nil
 }
 
 func convertToAuthRule(roleName string, roleDraft map[string]interface{}) *models.AuthRule {
