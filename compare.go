@@ -58,7 +58,7 @@ func (c compareIDsResult) hasContent() bool {
 }
 
 func (c compareResult) show() {
-	fmt.Println("team: " + color.New(color.FgWhite).Add(color.Bold).SprintFunc()(c.TeamName))
+	fmt.Println("team: " + color.New(color.FgHiWhite).Add(color.Bold).SprintFunc()(c.TeamName))
 	fmt.Println()
 
 	for _, roleResult := range c.Results {
