@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sort"
+
 	"github.com/YuukiARIA/glanceable/models"
 	"github.com/YuukiARIA/glanceable/stringset"
 )
@@ -8,32 +10,41 @@ import (
 func Compare(oldTeam, newTeam *models.Team) models.CompareResult {
 	roleResults := make([]models.CompareRoleResult, 0)
 
-	for roleName, oldRule := range oldTeam.Auth {
+	roleNameSet := stringset.New()
+	for rn := range oldTeam.Auth {
+		roleNameSet.Add(rn)
+	}
+	for rn := range newTeam.Auth {
+		roleNameSet.Add(rn)
+	}
+	roleNames := roleNameSet.Array()
+	sort.Strings(roleNames)
+
+	for _, roleName := range roleNames {
+		oldRule, oldExists := oldTeam.Auth[roleName]
+		newRule, newExists := newTeam.Auth[roleName]
+
 		var roleResult models.CompareRoleResult
 
-		newRule, exists := newTeam.Auth[roleName]
-		if exists {
-			roleResult = compareRule(oldRule, newRule)
-		} else {
-			roleResult = models.NewCompareRoleResultDeleted(
-				roleName,
-				models.NewCompareIDsResult(nil, oldRule.Users, nil),
-				models.NewCompareIDsResult(nil, oldRule.Groups, nil),
-			)
-		}
-		roleResults = append(roleResults, roleResult)
-	}
-
-	for roleName, newRule := range newTeam.Auth {
-		_, exists := oldTeam.Auth[roleName]
-		if !exists {
+		switch {
+		case !oldExists: // means the role is newly defined
 			roleResult := models.NewCompareRoleResultCreated(
 				roleName,
 				models.NewCompareIDsResult(newRule.Users, nil, nil),
 				models.NewCompareIDsResult(newRule.Groups, nil, nil),
 			)
 			roleResults = append(roleResults, roleResult)
+		case !newExists: // means the role definition was deleted
+			roleResult = models.NewCompareRoleResultDeleted(
+				roleName,
+				models.NewCompareIDsResult(nil, oldRule.Users, nil),
+				models.NewCompareIDsResult(nil, oldRule.Groups, nil),
+			)
+		default:
+			roleResult = compareRule(oldRule, newRule)
 		}
+
+		roleResults = append(roleResults, roleResult)
 	}
 
 	return models.NewCompareResult(oldTeam.Name, roleResults)
