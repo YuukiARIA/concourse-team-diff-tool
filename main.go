@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/jessevdk/go-flags"
 
@@ -14,6 +15,12 @@ type options struct {
 	ConfigFileName string `short:"c" long:"config" description:"team config file (yaml)" required:"yes"`
 	Format         string `short:"f" long:"format" default:"default" choice:"default" choice:"json" choice:"yaml" choicedescription:"output format (default, json, yaml)"`
 }
+
+const (
+	formatDefault = "default"
+	formatJSON    = "json"
+	formatYAML    = "yaml"
+)
 
 func loadTextFromFile(filePath string) ([]byte, error) {
 	file, err := os.Open(filePath)
@@ -30,12 +37,12 @@ func loadTextFromReader(reader io.Reader) ([]byte, error) {
 }
 
 func showResult(result compareResult, format string) {
-	switch format {
-	case "default":
+	switch strings.ToLower(format) {
+	case formatDefault:
 		ShowDefaultFormat(result)
-	case "json":
+	case formatJSON:
 		ShowJSONFormat(result)
-	case "yaml":
+	case formatYAML:
 		ShowYAMLFormat(result)
 	}
 }
