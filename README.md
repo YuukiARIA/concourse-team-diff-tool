@@ -15,6 +15,18 @@ Glanceable is a workaround for this.
   <img src="doc/get-team-glanceable.png" width="60%" />
 </div>
 
+## Install
+
+```
+go get github.com/YuukiARIA/glanceable
+```
+
+### Docker
+
+```
+docker pull yuukiaria/glanceable
+```
+
 ## Usage
 
 `glanceable` command requires two inputs:
@@ -27,7 +39,15 @@ Existing team configuration in JSON is provided by `fly get-team` with `--json` 
 So, usage pattern is basically as follows:
 
 ```
-fly -t <target> get-team -n <team> -j | glanceable -c <team-config.yml>
+fly -t [target] get-team -n [team] -j | glanceable -c [team-config.yml]
+```
+
+### Docker
+
+Note that `-i` is required to open stdin and mount workspace to make `[team-config.yml]` visible.
+
+```
+fly -t [target] get-team -n [team] -j | docker run --rm -i -v $(pwd):/work -w /work yuukiaria/glanceable -c [team-config.yml]
 ```
 
 ## Licence
