@@ -48,7 +48,7 @@ var (
 
 func LoadYAML(yamlData []byte) (*models.Team, error) {
 	teamDraft := teamDraft{}
-	if err := yaml.Unmarshal(yamlData, &teamDraft); err != nil {
+	if err := yaml.UnmarshalStrict(yamlData, &teamDraft); err != nil {
 		return nil, err
 	}
 
