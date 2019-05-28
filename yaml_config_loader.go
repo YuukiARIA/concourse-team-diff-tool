@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/YuukiARIA/glanceable/models"
 
 	yaml "gopkg.in/yaml.v2"
@@ -90,7 +92,7 @@ func getValues(rule map[interface{}]interface{}, authName string, keysTable map[
 	for _, key := range keysTable[authName] {
 		if list := rule[key]; list != nil {
 			for _, name := range list.([]interface{}) {
-				prefixedName := authName + ":" + name.(string)
+				prefixedName := authName + ":" + strings.ToLower(name.(string))
 				values = append(values, prefixedName)
 			}
 		}
